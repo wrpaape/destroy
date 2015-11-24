@@ -1,4 +1,11 @@
 defmodule Destroy do
+  @message
+    IO.ANSI.bright
+    <> IO.ANSI.red
+    <> "* destroying "
+    <> IO.ANSI.normal
+    <> IO.ANSI.white
+
   @parse_opts
   [
     switches:
@@ -11,11 +18,12 @@ defmodule Destroy do
       ]
   ]
 
+
   def main(argv) do
     argv
     |> parse_args
     |> process_args
-    |> destroy_generation
+    |> destroy_generated
   end
 
   def process_args(:help) do
@@ -28,7 +36,7 @@ defmodule Destroy do
   end
 
   def process_args([:html | [singular | _rest]]) do
-    destroy_generation(:html, singular)
+    destroy_generated(:html, singular)
   end
 
 
@@ -48,19 +56,20 @@ defmodule Destroy do
     end
   end
 
-  def destroy_generation(:html, singular) do
+  def destroy_generated(:html, singular) do
     ~w[
       web/controllers/#{singular}_controller.ex
-      web/templates/#{singular}/edit.html.eex
-      web/templates/#{singular}/form.html.eex
-      web/templates/#{singular}/index.html.eex
-      web/templates/#{singular}/new.html.eex
-      web/templates/#{singular}/show.html.eex
+      web/templates/#{singular}
       web/views/#{singular}_view.ex
       test/controllers/#{singular}_controller_test.exs
       priv/repo/migrations/??????????????_create_#{singular}.exs
       web/models/#{singular}.ex
       test/models/#{singular}_test.exs
     ]
+    |> Enum.flat_map(&Path.wild_card/1)
+    |> Enum.each(fn(path) ->
+      IO.puts @message <> path
+      File.rm_rf(path)
+    end)
   end
 end
