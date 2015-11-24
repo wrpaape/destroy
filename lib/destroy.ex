@@ -1,0 +1,2 @@
+defmodule Destroy do
+end
