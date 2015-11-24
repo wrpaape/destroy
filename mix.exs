@@ -7,6 +7,7 @@ defmodule Destroy.Mixfile do
      elixir: "~> 1.1",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     escript: escript_config,
      deps: deps]
   end
 
@@ -31,6 +32,6 @@ defmodule Destroy.Mixfile do
   end
 
   defp escript_config do
-    [ main_module: Destroy ]
+    [ main_module: Destroy.CLI ]
   end
 end
