@@ -29,4 +29,8 @@ defmodule Destroy.Mixfile do
   defp deps do
     []
   end
+
+  defp escript_config do
+    [ main_module: Destroy ]
+  end
 end
